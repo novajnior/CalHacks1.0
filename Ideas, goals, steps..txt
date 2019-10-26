@@ -18,4 +18,6 @@ MILESTONES/PROCESS (Our Roadmap, Can be changed at any time.)
 8) TBD
 ///////////////////////////////////////////////////////////////////////
 SUGGESTIONS (Comments or ideas you may have.)
-1)
+1) maybe put a QQR code instead of the google recognition first then when we have the basics working we will
+	switch over to the google Vision API and then see how we will implement it over the QR Code.
+	Overall finishing the game back and front end then implementing the Vision API instead of the QR codes.
