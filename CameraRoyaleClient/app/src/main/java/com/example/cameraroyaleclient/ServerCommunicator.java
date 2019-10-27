@@ -131,6 +131,7 @@ public class ServerCommunicator {
     }
     public static JSONObject getJSON(String string) {
         try {
+            Log.d("YEET", string);
             return (JSONObject) new JSONTokener(string).nextValue();
         } catch (JSONException e) {
             Log.e("BAD", "JSON parse failed");

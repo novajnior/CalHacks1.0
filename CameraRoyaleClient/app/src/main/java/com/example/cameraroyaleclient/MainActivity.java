@@ -76,10 +76,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 JSONObject responseobject = ServerCommunicator.getJSON(response);
+                Log.d("YEET", responseobject.toString());
                 JSONArray jsonArray = null;
                 try {
-                    jsonArray = (JSONArray) responseobject.get("gameList");
+                    jsonArray = responseobject.getJSONArray("gameList");
+                    Log.d("YEET", jsonArray.toString());
                 } catch (JSONException e) {
+                    Log.d("YEET", "Failrue");
+                    Log.e("YEET", e.getStackTrace().toString());
                     e.printStackTrace();
                 }
                 games.clear();
