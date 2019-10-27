@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             startGameAct();
 
         } else {
-            makeToast("Please select a device.");
+            makeToast("Please select a game.");
         }
     }
     private void startGameAct() {
@@ -148,6 +148,16 @@ public class MainActivity extends AppCompatActivity {
                 communicator.joinGame(game, playerID, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        JSONObject json = ServerCommunicator.getJSON(response);
+                        boolean success = false;
+                        try {
+                            success = json.getBoolean("success");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (success) {
+                            startGameAct();
+                        }
 
                     }
                 });
@@ -181,6 +191,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 game = input.getText().toString();
                 dialog.dismiss();
+                communicator.createNewGame(game, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("YEET", response);
+                        updateGames();
+                    }
+                });
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

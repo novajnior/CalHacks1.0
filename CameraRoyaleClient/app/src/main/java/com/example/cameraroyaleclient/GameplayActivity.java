@@ -1,8 +1,10 @@
 package com.example.cameraroyaleclient;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -81,16 +83,43 @@ public class GameplayActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 JSONObject json = ServerCommunicator.getJSON(response);
                 boolean alive = true;
+                boolean winner = false;
                 int playersLeft = 0;
+                String killfeed = "";
                 try {
                     alive = json.getBoolean("alive");
                     playersLeft = json.getInt("playersLeft");
+                    killfeed = json.getString("killfeed");
+                    winner = json.getBoolean("winner");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if(!alive) {
                     urdead.setVisibility(View.VISIBLE);
                     watchyourback.setVisibility(View.VISIBLE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GameplayActivity.this);
+                    builder.setTitle("You died!")
+                            .setMessage("Better luck next time!")
+                            .setPositiveButton("oof", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                }
+                if(killfeed.length() > 0) {
+                    makeToast(killfeed);
+                }
+                if(winner) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GameplayActivity.this);
+                    builder.setTitle("You win!")
+                            .setMessage("VICTORY ROYALE!")
+                            .setPositiveButton("gg", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
                 }
                 playersRemaining.setText("Players remaining: " + playersLeft);
             }
@@ -168,7 +197,9 @@ public class GameplayActivity extends AppCompatActivity {
                         // Task completed successfully
                         // [START_EXCLUDE]
                         // [START get_barcodes]
-                        makeToast("TARGETS DETECTED. SENDING TO SERVER.");
+                        if(barcodes.size() == 0) {
+                            makeToast("NO TARGETS DETECTED.");
+                        }
                         for (FirebaseVisionBarcode barcode: barcodes) {
                             //Rect bounds = barcode.getBoundingBox();
                             //Point[] corners = barcode.getCornerPoints();
@@ -178,8 +209,17 @@ public class GameplayActivity extends AppCompatActivity {
                             communicator.killAttempt(MainActivity.game, MainActivity.playerID, rawValue, new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    makeToast("KILL CONFIRMED.");
-                                    killcount++;
+                                    JSONObject json = ServerCommunicator.getJSON(response);
+                                    boolean success = false;
+                                    try {
+                                        success = json.getBoolean("success");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (success) {
+                                        makeToast("KILL CONFIRMED.");
+                                        killcount++;
+                                    }
                                 }
                             });
 

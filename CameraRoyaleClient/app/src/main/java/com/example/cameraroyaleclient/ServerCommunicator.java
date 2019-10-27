@@ -84,6 +84,16 @@ public class ServerCommunicator {
         StringRequest stringRequest = constructPOSTRequest(URL_BASE + "joinGame", listener, payload);
         queue.add(stringRequest);
     }
+    public void createNewGame(String game, Response.Listener<String> listener){
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("game", game);
+        } catch(JSONException e) {
+            Log.e("JSON", "Look ma, I caught it!");
+        }
+        StringRequest stringRequest = constructPOSTRequest(URL_BASE + "createNewGame", listener, payload);
+        queue.add(stringRequest);
+    }
     public void killAttempt(String game, String playerID, String targetID, Response.Listener<String> listener) {
         JSONObject payload = new JSONObject();
         try {
