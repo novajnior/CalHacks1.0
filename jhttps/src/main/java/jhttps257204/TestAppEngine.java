@@ -1,4 +1,7 @@
 package jhttps257204;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+
 
 import java.io.IOException;
 
@@ -8,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-    name = "HelloAppEngine",
-    urlPatterns = {"/Hello"}
+    name = "TestAppEngine",
+    urlPatterns = {"/test"}
 )
-public class HelloAppEngine extends HttpServlet {
+public class TestAppEngine extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -20,6 +23,7 @@ public class HelloAppEngine extends HttpServlet {
     response.setContentType("text/plain");
     response.setCharacterEncoding("UTF-8");
 
-    response.getWriter().print("default Hello Site <3");
+    response.getWriter().print("{“ayylmao”: “lmao”}");
+
   }
 }

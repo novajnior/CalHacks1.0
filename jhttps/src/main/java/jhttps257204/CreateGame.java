@@ -1,4 +1,7 @@
 package jhttps257204;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+
 
 import java.io.IOException;
 
@@ -8,18 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-    name = "HelloAppEngine",
-    urlPatterns = {"/Hello"}
+    name = "CreateGame",
+    urlPatterns = {"/createNewGame"}
 )
-public class HelloAppEngine extends HttpServlet {
-
+public class CreateGame extends HttpServlet {
+	
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) 
       throws IOException {
-
+	  Game newGame = new Game("INSERT_GAME_ID");
     response.setContentType("text/plain");
     response.setCharacterEncoding("UTF-8");
 
-    response.getWriter().print("default Hello Site <3");
+    response.getWriter().print("{“success”: “true”/”false”}");
+    
   }
 }
