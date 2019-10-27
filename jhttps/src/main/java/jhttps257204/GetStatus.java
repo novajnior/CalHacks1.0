@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
     name = "GetStatus",
-    urlPatterns = {"/getStatus?game=*****&playerID=*****"}
+    urlPatterns = {"/getStatus?game=&playerID=*****"}
 )
 public class GetStatus extends HttpServlet {
 
