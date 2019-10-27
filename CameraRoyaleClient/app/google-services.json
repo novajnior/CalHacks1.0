@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "4214484317",
+    "firebase_url": "https://jhttp-257204.firebaseio.com",
+    "project_id": "jhttp-257204",
+    "storage_bucket": "jhttp-257204.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4214484317:android:0c89ca7d65645a93610cb4",
+        "android_client_info": {
+          "package_name": "com.example.cameraroyaleclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4214484317-u89b20j7ar61n561qm2hbud0ckfdicf6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUQssubT0RZfsuawo1ypJmBw1lG6VXGfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4214484317-u89b20j7ar61n561qm2hbud0ckfdicf6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

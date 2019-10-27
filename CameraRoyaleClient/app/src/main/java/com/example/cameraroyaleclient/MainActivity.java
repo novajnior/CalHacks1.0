@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -16,6 +17,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,27 +60,70 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RadioAdapter(games);
         recyclerView.setAdapter(mAdapter);
 
+        //updateGames();
+
         /*spinner = (Spinner) findViewById(R.id.spinner);
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PLAYERCOUNTS);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         Log.d("YEET", spinnerAdapter.getItem(0).toString());*/
     }
+    public void refresh(View view) {
+        updateGames();
+    }
+    private void updateGames() {
+        communicator.getGameList(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject responseobject = ServerCommunicator.getJSON(response);
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = (JSONArray) responseobject.get("gameList");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                games.clear();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        games.add(jsonArray.getString(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
     public void joinGame(View view) {
         //This is the onclick method for the join game button.
         //Log.d("YEET", spinnerAdapter.getItem(0).toString());
         if (mAdapter.getCurrentSelected() != null) {
-            //TODO: THIIIIIIIINGS
-            playerIDInput();
+            game = mAdapter.getCurrentSelected();
+            //TODO: UNCOMMENT THIS NEXT LINE WHEN THE BACKEND WORKS
+            //playerIDInput();
+            //TODO: REMOVE/COMMENT OUT THIS DEBUG BYPASS TO THE GAMEPLAY ACTIVITY
+            startGameAct();
 
         } else {
             makeToast("Please select a device.");
         }
     }
+    private void startGameAct() {
+        Intent intent = new Intent(this, GameplayActivity.class);
+        startActivity(intent);
+    }
     public void newGame(View view) {
         //this is the onclick method for the new game button.
         //int number = (Integer) spinner.getSelectedItem();
         gameNameInput();
+    }
+    public void serverTest(View view) {
+        communicator.serverTest(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                makeToast(response);
+            }
+        });
     }
     private void playerIDInput() {
         /**
@@ -93,8 +143,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                game = input.getText().toString();
+                playerID = input.getText().toString();
                 dialog.dismiss();
+                communicator.joinGame(game, playerID, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                });
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -123,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                playerID = input.getText().toString();
+                game = input.getText().toString();
                 dialog.dismiss();
             }
         });

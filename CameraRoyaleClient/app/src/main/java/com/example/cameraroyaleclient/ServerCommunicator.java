@@ -1,6 +1,7 @@
 package com.example.cameraroyaleclient;
 
 import android.content.Context;
+import android.os.Debug;
 import android.util.Log;
 
 import com.android.volley.*;
@@ -18,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerCommunicator {
-    public static final String URL_BASE = "http://ftp.nurlink.com:8080/";
-    public static final String URL_REGISTRATION_SUFFIX = "addUser";
+    public static final String URL_BASE = "https://jhttp-257204.appspot.com/";
+    /*public static final String URL_REGISTRATION_SUFFIX = "addUser";
     public static final String URL_LOGIN_SUFFIX = "login";
     public static final String URL_LOGOUT_SUFFIX = "loginout";
     public static final String URL_LINK_SUFFIX = "addUserDevice";
@@ -31,7 +32,7 @@ public class ServerCommunicator {
     public static final String URL_TOKEN_QUERY = "token=";
     public static final String URL_NODEID_QUERY = "nodeId=";
     public static final String URL_START_TIME_QUERY = "start_time=";
-    public static final String URL_END_TIME_QUERY = "end_time=";
+    public static final String URL_END_TIME_QUERY = "end_time=";*/
 
     private Context context;
     private RequestQueue queue;
@@ -59,7 +60,42 @@ public class ServerCommunicator {
         StringRequest stringRequest = constructPOSTRequest(url, listener, payload);
         queue.add(stringRequest);
     }*/
+    public void serverTest(Response.Listener<String> listener){
+        StringRequest stringRequest = constructGETRequest(URL_BASE + "test", listener);
+        queue.add(stringRequest);
+    }
+    public void getGameList(Response.Listener<String> listener){
+        StringRequest stringRequest = constructGETRequest(URL_BASE + "getGameList", listener);
+        queue.add(stringRequest);
+    }
+    public void getStatus(String game, String playerID, Response.Listener<String> listener){
+        StringRequest stringRequest = constructGETRequest(URL_BASE + "getStatus" + "?game=" + game + "&playerID=" + playerID, listener);
+        queue.add(stringRequest);
+    }
 
+    public void joinGame(String game, String playerID, Response.Listener<String> listener){
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("game", game);
+            payload.put("playerID", playerID);
+        } catch(JSONException e) {
+            Log.e("JSON", "Look ma, I caught it!");
+        }
+        StringRequest stringRequest = constructPOSTRequest(URL_BASE + "joinGame", listener, payload);
+        queue.add(stringRequest);
+    }
+    public void killAttempt(String game, String playerID, String targetID, Response.Listener<String> listener) {
+        JSONObject payload = new JSONObject();
+        try {
+            payload.put("game", game);
+            payload.put("playerID", playerID);
+            payload.put("targetID", targetID);
+        } catch(JSONException e) {
+            Log.e("JSON", "Look ma, I caught it!");
+        }
+        StringRequest stringRequest = constructPOSTRequest(URL_BASE + "killAttempt", listener, payload);
+        queue.add(stringRequest);
+    }
     private static StringRequest constructPOSTRequest(String url, Response.Listener<String> listener, JSONObject payload) {
         final byte[] payloadbytes = payload.toString().getBytes();
         return new StringRequest(Request.Method.POST, url, listener, ERROR_LISTENER) {
